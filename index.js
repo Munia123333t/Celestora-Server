@@ -106,4 +106,18 @@ app.get('/celestoras/search', async (req, res) => {
         const result = await cursor.toArray();
         res.send(result);
     })
-}}
+
+// get data by top like count
+    app.get('/topCelestora', async (req, res) => {
+        try {
+            const limit = parseInt(req.query.limit) || 0; // Default limit is 0 (no limit)
+            const query = {}; // Define query to fetch all documents
+            const cursor = celestoraCollection.find(query).sort({ likeCount: -1 }).limit(limit);
+            const result = await cursor.toArray();
+            res.send(result);
+        } catch (error) {
+            console.error(error);
+            res.status(500).send({ error: 'An error occurred while fetching top Celestora data.' });
+        }
+    });
+
