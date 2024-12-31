@@ -21,3 +21,15 @@ serverApi: {
     deprecationErrors: true,
 }
 });
+
+async function run() {
+try {
+    // Connect the client to the server	(optional starting in v4.7)
+    // Send a ping to confirm a successful connection
+  
+
+    const celestoraCollection = client.db('pastFinderDB').collection('celestora')
+    
+    const likedCelestoraCollection = client.db('pastFinderDB').collection('likedCelestora');
+}
+}
