@@ -147,3 +147,19 @@ app.put('/celestora/:id', async (req, res) => {
         res.status(500).send({ success: false, error: error.message });
     }
 });
+
+    // data details
+    app.get('/celestora/:id', async(req, res)=> {
+        const id = req.params.id;
+        const query={_id: new ObjectId(id)}
+        const result =await celestoraCollection.findOne(query);
+        res.send(result);
+    })
+    
+    // data post
+    app.post('/celestora',async(req,res)=>{
+        const newCelestora = req.body;
+        console.log(newCelestora);
+        const result = await celestoraCollection.insertOne(newCelestora);
+        res.send(result);
+    })
