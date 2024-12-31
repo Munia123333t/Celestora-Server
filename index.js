@@ -121,3 +121,29 @@ app.get('/celestoras/search', async (req, res) => {
         }
     });
 
+
+    // my artifact data delete
+
+    app.delete('/celestora/:id', async(req,res)=>{
+        const id = req.params.id;
+        const query = {_id: new ObjectId(id)}
+        const result = await celestoraCollection.deleteOne(query);
+        res.send(result);
+      })
+
+// my artifact update handleUpdate
+
+app.put('/celestora/:id', async (req, res) => {
+    const id = req.params.id;
+    const updatedCelestora = req.body;
+    const filter = { _id: new ObjectId(id) };
+    const update = { $set: updatedCelestora };
+    const options = { upsert: true };
+
+    try {
+        const result = await celestoraCollection.updateOne(filter, update, options);
+        res.send(result);
+    } catch (error) {
+        res.status(500).send({ success: false, error: error.message });
+    }
+});
