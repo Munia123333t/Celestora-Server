@@ -31,5 +31,39 @@ try {
     const celestoraCollection = client.db('pastFinderDB').collection('celestora')
     
     const likedCelestoraCollection = client.db('pastFinderDB').collection('likedCelestora');
-}
-}
+}}
+
+
+    data fetch with search and email
+
+    app.get('/celestora', async (req, res) => {
+        const email = req.query.email;
+        const search = req.query.search || ""; 
+    
+        const query = {};
+    
+        // Filter by email if provided
+        if (email) {
+            query.userEmail = email;
+        }
+    
+        // Add regex-based search filter if search term is provided
+        if (search) {
+            query.name = { $regex: search, $options: "i" }; // Fixed here
+        }
+    
+        const limit = parseInt(req.query.limit) || 0; 
+        const cursor = celestoraCollection.find(query).sort({ likeCount: -1 }).limit(limit);
+        const result = await cursor.toArray();
+        res.send(result);
+    });
+    
+    app.get('/celestoras', async (req, res) => {
+        const search = req.query.search || ""; 
+        const query = {
+            name: { $regex: search, $options: "i" },
+        };
+        const cursor = celestoraCollection.find(query);
+        const result = await cursor.toArray();
+        res.send(result);
+    });
