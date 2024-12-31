@@ -32,7 +32,7 @@ try {
     
     const likedCelestoraCollection = client.db('pastFinderDB').collection('likedCelestora');
 
-}
+
 
     // data fetch with search and email
 
@@ -80,4 +80,30 @@ app.get('/celestoras', async (req, res) => {
     }
 });
 
-}
+// Route to handle search
+app.get('/celestoras/search', async (req, res) => {
+    try {
+        const search = req.query.search || ""; 
+        const query = {
+            name: { $regex: search, $options: "i" }, 
+        };
+        const result = await celestoraCollection.find(query).toArray(); 
+        res.send(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: 'Failed to search Celestora data.' });
+    }
+});
+
+// get data by email
+    app.get('/emailCelestora', async(req,res)=>{
+        const email = req.query.email;
+        let query ={};
+        if(email){
+            query= {userEmail:email}
+        }
+        const cursor = celestoraCollection.find(query);
+        const result = await cursor.toArray();
+        res.send(result);
+    })
+}}
