@@ -163,3 +163,39 @@ app.put('/celestora/:id', async (req, res) => {
         const result = await celestoraCollection.insertOne(newCelestora);
         res.send(result);
     })
+
+
+
+     // Like antiques apis 
+
+     app.get('/likedCelestora', async (req, res) => {
+        const email = req.query.email;
+        const query = { applicant_email: email }
+        const result = await likedCelestoraCollection.find(query).toArray();
+        
+        for (const likes of result) {
+            console.log(likes.celestora_id)
+            const query1 = { _id: new ObjectId(likes.celestora_id) }
+            const celestora = await likedCelestoraCollection.findOne(query1);
+            if (celestora) {
+                likes.name = celestora.name;
+                likes.type = celestora.type;
+                likes.createdAt = celestora.createdAt;
+            }
+        }
+
+        res.send(result);
+    })
+
+
+    app.post('/likedCelestora', async (req, res) => {
+        const { celestora_id, applicant_email,name,image,type,historicalContext,createdAt,discoveredAt,discoveredBy,presentLocation} = req.body;
+    
+        try {
+           
+        } catch (error) {
+            
+        }
+    });
+    
+}}
