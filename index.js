@@ -203,5 +203,16 @@ app.put('/celestora/:id', async (req, res) => {
             }
     
             res.send(result);
-        } 
+        } catch (error) {
+            if (error.code === 11000) {
+                // Duplicate error: User already liked the artifact
+                res.status(400).send({ error: "Artifact already liked by this user" });
+            } else {
+                console.error("Error liking artifact:", error.message);
+                res.status(500).send({ error: "Failed to like artifact" });
+            }
+        }
     });
+    
+
+}}
