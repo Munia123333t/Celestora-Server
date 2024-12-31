@@ -192,10 +192,16 @@ app.put('/celestora/:id', async (req, res) => {
         const { celestora_id, applicant_email,name,image,type,historicalContext,createdAt,discoveredAt,discoveredBy,presentLocation} = req.body;
     
         try {
-           
-        } catch (error) {
-            
-        }
-    });
+            // Insert the like if it doesn't exist
+            const result = await likedCelestoraCollection.insertOne({ celestora_id, applicant_email,name,image,type,historicalContext,createdAt,discoveredAt,discoveredBy,presentLocation });
     
-}}
+            if (result.acknowledged) {
+                // Increment like count only if the like was added
+                const filter = { _id: new ObjectId(celestora_id) };
+                const update = { $inc: { likeCount: 1 } };
+                await celestoraCollection.updateOne(filter, update);
+            }
+    
+            res.send(result);
+        } 
+    });
