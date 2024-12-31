@@ -215,4 +215,51 @@ app.put('/celestora/:id', async (req, res) => {
     });
     
 
-}}
+
+
+
+
+
+app.get('/likedCelestora/:id', async (req, res) => {
+    const { id } = req.params;
+    const email = req.query.email;
+
+    const query = { celestora_id: id, applicant_email: email };
+    const likedCelestora = await likedCelestoraCollection.findOne(query);
+
+    res.send({ liked: !!likedCelestora });
+});
+
+//delete like data 
+app.delete('/likedCelestora/:id', async (req, res) => {
+    const { id } = req.params;
+    const email = req.query.email;
+
+    const query = { celestora_id: id, applicant_email: email };
+    const result = await likedCelestoraCollection.deleteOne(query);
+
+    if (result.deletedCount > 0) {
+        res.send({ success: true });
+    } else {
+        res.status(404).send({ error: "Like not found" });
+    }
+});
+
+await client.db("admin").command({ ping: 1 });
+console.log("Pinged your deployment. You successfully connected to MongoDB!");
+
+} finally {
+    // Ensures that the client will close when you finish/error
+    // await client.close();
+}
+}
+run().catch(console.dir);
+
+
+app.get('/', (req,res)=>{
+    res.send('You’re digging in the wrong place!')
+})
+
+app.listen(port,()=>{
+    console.log(`I’ve got a bad feeling about this:${port}`)
+})
